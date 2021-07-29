@@ -1,4 +1,4 @@
-﻿namespace CatalogoAPI.Models
+﻿namespace Catalog.Application.Dtos
 {
     public class PutProductInput
     {

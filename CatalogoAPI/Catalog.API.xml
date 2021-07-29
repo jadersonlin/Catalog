@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Catalog.API</name>
+    </assembly>
+    <members>
+        <member name="M:Catalog.API.Controllers.FilesController.Upload(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            
+            </summary>
+            <param name="file"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Catalog.API.Controllers.ProductsController">
+            <summary>
+            Actions in Product Context
+            </summary>
+        </member>
+        <member name="M:Catalog.API.Controllers.ProductsController.#ctor(Microsoft.Extensions.Logging.ILogger{Catalog.API.Controllers.ProductsController},Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">
+            <summary>
+            Actions in Product Context
+            </summary>
+            <param name="logger"></param>
+            <param name="environment"></param>
+        </member>
+        <member name="M:Catalog.API.Controllers.ProductsController.Get(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Catalog.API.Controllers.ProductsController.Put(Catalog.Application.Dtos.PutProductInput,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="input"></param>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Catalog.API.Controllers.ProductsController.Delete(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
