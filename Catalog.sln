@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalog.Application", "Cata
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalog.Domain", "CatalogoAPI.Domain\Catalog.Domain.csproj", "{0C3870A0-0419-4E64-9AB3-34D2B2384DC5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.Infrastructure", "CatalogoAPI.Infrastructure\Catalog.Infrastructure.csproj", "{B325AA87-9851-46B3-AA23-D59CEAB81BF4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalog.Infrastructure", "CatalogoAPI.Infrastructure\Catalog.Infrastructure.csproj", "{B325AA87-9851-46B3-AA23-D59CEAB81BF4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
