@@ -6,6 +6,6 @@ namespace Catalog.Application.Interfaces
 {
     public interface IStorageService
     {
-        Task<UploadFileResult> UploadFile(IFormFile file, string rootPath);
+        Task<UploadFileResult> Upload(IFormFile file);
     }
 }

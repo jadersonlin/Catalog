@@ -1,8 +1,12 @@
 using System;
 using System.IO;
 using System.Reflection;
+using Catalog.Application.Interfaces;
+using Catalog.Infrastructure.Messages;
+using Catalog.Infrastructure.Storage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -28,6 +32,15 @@ namespace Catalog.API
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Catalog API", Version = "v1" });
                 c.IncludeXmlComments(GetXmlCommentsFilePath());
             });
+
+            services.AddAzureClients(builder =>
+            {
+                builder.AddBlobServiceClient(Configuration.GetSection("Storage:ConnectionString").Value);
+                builder.AddQueueServiceClient(Configuration.GetSection("Queue:ConnectionString").Value);
+            });
+
+            services.AddScoped<IStorageService, FileStorageService>();
+            services.AddScoped<IQueueService, AzureQueueService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

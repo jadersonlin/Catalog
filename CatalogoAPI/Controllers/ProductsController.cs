@@ -34,10 +34,11 @@ namespace Catalog.API.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [Route("{id}")]
         [HttpGet]
         public async Task<GetProductResult> Get(int id)
         {
-            throw new NotImplementedException();
+            return new GetProductResult();
         }
 
         /// <summary>
@@ -47,8 +48,9 @@ namespace Catalog.API.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         //[Route("~/[action]/{id}")]
+        [Route("{id}")]
         [HttpPut]
-        public async Task<PutProductResult> Put(PutProductInput input, int id)
+        public async Task<PutProductResult> Put([FromBody]PutProductInput input, int id)
         {
             throw new NotImplementedException();
         }
@@ -59,6 +61,7 @@ namespace Catalog.API.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         //[Route("~/[action]/{id}")]
+        [Route("{id}")]
         [HttpDelete]
         public async Task<DeleteProductResult> Delete(int id)
         {

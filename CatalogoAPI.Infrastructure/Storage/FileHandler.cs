@@ -1,58 +1,81 @@
-﻿using System;
+﻿using Catalog.Application.Dtos;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using System;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using Azure.Storage.Blobs;
 
 namespace Catalog.Infrastructure.Storage
 {
     public class FileHandler
     {
+        private readonly IConfiguration configuration;
         private readonly IFormFile file;
-        private readonly string rootPath;
+        private readonly BlobServiceClient blobServiceClient;
         private const string ValidExtension = ".xlsx";
-        private const string SpreadsheetDirectory = "\\spreadsheets\\";
 
-        public FileHandler(IFormFile file, string rootPath)
+        public FileHandler(IConfiguration configuration, IFormFile file, BlobServiceClient blobServiceClient)
         {
+            this.configuration = configuration;
             this.file = file;
-            this.rootPath = rootPath;
+            this.blobServiceClient = blobServiceClient;
         }
 
-        public async Task<string> SaveFile()
+        public async Task<FileData> SaveFile()
         {
             if (!IsValid())
                 throw new InvalidDataException("Arquivo inválido!");
 
-            var fileGuid = Guid.NewGuid().ToString();
+            var id = Guid.NewGuid();
 
-            var filePath = GetFilePath(fileGuid);
+            var fileName = id + ValidExtension;
 
-            using (var filestream = File.Create(filePath))
-            {
-                await file.CopyToAsync(filestream);
+            await using var stream = file.OpenReadStream();
 
-                filestream.Flush();
-            }
+            var blobClient = GetBlobClient(fileName);
+            var result = await blobClient.UploadAsync(stream, false);
 
-            return fileGuid;
+            var hash = Convert.ToBase64String(result.Value.ContentHash);
+
+            return GetFileData(id, hash);
         }
 
-        private string GetFilePath(string fileGuid)
+        private BlobClient GetBlobClient(string blobName)
         {
-            var directory = rootPath + SpreadsheetDirectory;
+            var containerClient = GetContainerClient();
 
-            if (!Directory.Exists(directory))
-                Directory.CreateDirectory(directory);
+            if (!containerClient.Exists()) 
+                throw new InvalidOperationException("Blob client doesn't exist.");
 
-            var fileName = file.FileName;
+            var blobClient = containerClient.GetBlobClient(blobName);
+             
+            return blobClient;
+        }
 
-            var filePath = directory + fileGuid + Path.GetExtension(fileName);
-            return filePath;
+        private BlobContainerClient GetContainerClient()
+        {
+            var containerName = configuration.GetSection("Storage:ContainerName").Value;
+            var containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+            containerClient.CreateIfNotExists();
+            return containerClient;
         }
 
         private bool IsValid()
         {
             return file.Length > 0 && Path.GetExtension(file.FileName) == ValidExtension;
+        }
+
+        private FileData GetFileData(Guid id, string hash)
+        {
+            return new FileData
+            {
+                Id = id,
+                FileName = file.FileName,
+                Length = file.Length,
+                UploadedAt = DateTime.Now,
+                Hash = hash
+            };
         }
     }
 }

@@ -8,4 +8,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="1.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CatalogoAPI.Domain\Catalog.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

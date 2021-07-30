@@ -4,7 +4,6 @@ using Catalog.Application.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace Catalog.API.Controllers
 {
@@ -12,16 +11,10 @@ namespace Catalog.API.Controllers
     [ApiController]
     public class FilesController : ControllerBase
     {
-        private readonly ILogger<ProductsController> logger;
-        private readonly IWebHostEnvironment environment;
         private readonly IStorageService storageService;
-
-        public FilesController(ILogger<ProductsController> logger,
-            IWebHostEnvironment environment,
-            IStorageService storageService)
+        
+        public FilesController(IStorageService storageService)
         {
-            this.logger = logger;
-            this.environment = environment;
             this.storageService = storageService;
         }
 
@@ -34,7 +27,7 @@ namespace Catalog.API.Controllers
         [Route("upload")]
         public async Task<UploadFileResult> Upload([FromForm] IFormFile file)
         {
-            return await storageService.UploadFile(file, environment.WebRootPath);
+            return await storageService.Upload(file);
         }
     }
 }

@@ -2,14 +2,12 @@
 
 namespace Catalog.Application.Dtos
 {
-    public class UploadFileResult : ResultBase
+    public class FileData
     {
-        /// <summary>
-        /// Identificador do arquivo.
-        /// </summary>
         public Guid Id { get; set; }
         public string FileName { get; set; }
         public long Length { get; set; }
         public DateTime UploadedAt { get; set; }
+        public string Hash { get; set; }
     }
 }

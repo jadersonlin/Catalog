@@ -1,15 +1,29 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using Catalog.Domain.Enums;
 
 namespace Catalog.Domain.Models
 {
     public class File
     {
-        public Guid Id { get; set; }
+        public File(Guid id)
+        {
+            Id = id;
+            ValidationErrors = new List<KeyValuePair<string, string>>();
+        }
 
-        public DateTime UploadStartedAt { get; set; }
+        public Guid Id { get; }
+        public string FileName { get; set; }
+        public long Length { get; set; }
+        public DateTime UploadedAt { get; set; }
+        public DateTime? ProcessedAt { get; set; }
+        public FileProcessingStatus Status { get; set; }
+        public IList<KeyValuePair<string, string>> ValidationErrors { get; }
 
-        public DateTime UploadFinishedAt { get; set; }
-
-        public string Username { get; set; }
+        public void InformError(string cell, string errorMessage)
+        {
+            ValidationErrors.Add(new KeyValuePair<string, string>(cell, errorMessage));
+        }
     }
 }

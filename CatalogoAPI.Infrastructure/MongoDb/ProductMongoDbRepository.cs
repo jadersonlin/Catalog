@@ -8,11 +8,6 @@ namespace Catalog.Infrastructure.MongoDb
 {
     public class ProductMongoDbRepository : IProductRepository
     {
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
-
         public Task<Product> GetById(int? id)
         {
             throw new NotImplementedException();
@@ -31,6 +26,11 @@ namespace Catalog.Infrastructure.MongoDb
         public Task Remove(Product obj)
         {
             throw new NotImplementedException();
+        }
+
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
         }
     }
 }
