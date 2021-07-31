@@ -8,6 +8,7 @@ namespace Catalog.Domain.Repositories
     {
         Task<TEntity> GetById(int? id);
         Task<IEnumerable<TEntity>> GetAll();
+        Task InsertMany(IList<TEntity> obj);
         Task Update(TEntity obj);
         Task Remove(TEntity obj);
     }

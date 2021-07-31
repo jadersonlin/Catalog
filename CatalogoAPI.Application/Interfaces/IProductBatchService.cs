@@ -5,6 +5,6 @@ namespace Catalog.Application.Interfaces
 {
     public interface IProductBatchService
     {
-        Task<ProcessFileResult> ProcessFile(ProcessFileInput input);
+        Task ProcessFile();
     }
 }

@@ -1,0 +1,32 @@
+version: '3.4'
+
+services:
+  catalogdb:
+    container_name: catalogdb
+    restart: always
+    volumes:
+        - ${WEBAPP_STORAGE_HOME}/site:/data/db
+    ports:
+        - "27017:27017"
+
+  catalog.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - "CatalogDatabaseSettings:ConnectionString=mongodb://catalogdb:27017"
+    depends_on:
+      - catalogdb
+      - azurite
+    ports:
+      - "80"
+      - "443"
+    volumes:
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+  catalog.background:
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+    environment:
+      - "CatalogDatabaseSettings:ConnectionString=mongodb://catalogdb:27017"
+    depends_on:
+      - catalogdb
+      - azurite

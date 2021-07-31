@@ -13,6 +13,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalog.Domain", "CatalogoA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalog.Infrastructure", "CatalogoAPI.Infrastructure\Catalog.Infrastructure.csproj", "{B325AA87-9851-46B3-AA23-D59CEAB81BF4}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalog.Background", "Catalog.Background\Catalog.Background.csproj", "{47AD45B0-64C7-4283-BB1E-A10F8975BF4B}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{96689473-5A76-4F44-8160-0D469A00FC20}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{B325AA87-9851-46B3-AA23-D59CEAB81BF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B325AA87-9851-46B3-AA23-D59CEAB81BF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B325AA87-9851-46B3-AA23-D59CEAB81BF4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47AD45B0-64C7-4283-BB1E-A10F8975BF4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47AD45B0-64C7-4283-BB1E-A10F8975BF4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47AD45B0-64C7-4283-BB1E-A10F8975BF4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47AD45B0-64C7-4283-BB1E-A10F8975BF4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96689473-5A76-4F44-8160-0D469A00FC20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96689473-5A76-4F44-8160-0D469A00FC20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96689473-5A76-4F44-8160-0D469A00FC20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96689473-5A76-4F44-8160-0D469A00FC20}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

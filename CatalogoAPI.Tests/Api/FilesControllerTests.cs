@@ -28,6 +28,7 @@ namespace Catalog.Tests.Api
         [Fact]
         public async Task POST_can_insert_spreadsheet()
         {
+            //arrange
             const string fileName = "products_test_no_errors.xlsx";
             var path = AppDomain.CurrentDomain.SetupInformation.ApplicationBase + "\\TestFiles\\" + fileName;
             var stream = File.OpenRead(path);
@@ -36,16 +37,30 @@ namespace Catalog.Tests.Api
             fileMock.Setup(_ => _.OpenReadStream()).Returns(stream);
             fileMock.Setup(_ => _.FileName).Returns(fileName);
             fileMock.Setup(_ => _.Length).Returns(stream.Length);
-            var uploadFileResultMock = new Mock<UploadFileResult>();
-            uploadFileResultMock.SetupAllProperties();
-            storageServiceMock.Setup(_ => _.Upload(fileMock.Object)).ReturnsAsync(uploadFileResultMock.Object);
             
+            var uploadFileResult = new UploadFileResult
+            {
+                Id = Guid.NewGuid(),
+                FileName = fileName,
+                Length = 10000,
+                UploadedAt = new DateTime(2020,01,01),
+                Message = "File uploaded"
+            };
+            
+            storageServiceMock.Setup(_ => _.Upload(fileMock.Object)).ReturnsAsync(uploadFileResult);
+
+
+            //act
             var controller = new FilesController(storageServiceMock.Object);
             var result = await controller.Upload(fileMock.Object);
 
+
+            //assert
             Assert.IsAssignableFrom<UploadFileResult>(result);
             Assert.IsType<Guid>(result.Id);
             Assert.IsType<DateTime>(result.UploadedAt);
+            Assert.IsType<string>(result.FileName);
+            Assert.IsType<string>(result.Message);
         }
     }
 }

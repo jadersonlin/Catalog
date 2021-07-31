@@ -1,40 +1,34 @@
-﻿using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using Azure.Storage.Blobs;
-using Azure.Storage.Queues;
+﻿using Azure.Storage.Blobs;
 using Catalog.Application.Dtos;
 using Catalog.Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace Catalog.Infrastructure.Storage
 {
     public class FileStorageService : IStorageService
     {
         private readonly IConfiguration configuration;
-        private readonly ILogger logger;
         private readonly IQueueService queueService;
-        private readonly BlobServiceClient blobServiceClient;
         private const string SaveFileMessage = "File successfully uploaded. Use Id to get the processing status.";
+        private readonly FileHandler fileHandler;
 
         public FileStorageService(IConfiguration configuration,
-                                  ILogger logger,
                                   IQueueService queueService,
                                   BlobServiceClient blobServiceClient)
         {
             this.configuration = configuration;
-            this.logger = logger;
             this.queueService = queueService;
-            this.blobServiceClient = blobServiceClient;
+            fileHandler = new FileHandler(configuration, blobServiceClient);
         }
 
         public async Task<UploadFileResult>Upload(IFormFile file)
         {
-            var fileHandler = new FileHandler(configuration, file, blobServiceClient);
-
-            var fileData = await fileHandler.SaveFile();
+            var fileData = await fileHandler.SaveFile(file);
 
             var result = new UploadFileResult
             {
@@ -47,11 +41,14 @@ namespace Catalog.Infrastructure.Storage
 
             var jsonResult = JsonConvert.SerializeObject(result);
 
-            var messageId = await queueService.SendMessage(jsonResult);
-
-            logger.LogInformation(messageId, "New file uploaded.", jsonResult);
+            await queueService.SendMessage(jsonResult);
 
             return result;
+        }
+
+        public async Task<Stream> GetFile(string fileId)
+        { 
+            return await fileHandler.DownloadFile(fileId);
         }
     }
 }

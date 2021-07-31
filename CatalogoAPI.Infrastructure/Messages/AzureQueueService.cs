@@ -1,10 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using Azure;
+﻿using Azure.Storage.Queues;
+using Catalog.Application.Dtos;
 using Catalog.Application.Interfaces;
-using Azure.Storage.Queues;
-using Azure.Storage.Queues.Models;
 using Microsoft.Extensions.Configuration;
+using System;
+using System.Threading.Tasks;
 
 namespace Catalog.Infrastructure.Messages
 {
@@ -40,16 +39,26 @@ namespace Catalog.Infrastructure.Messages
             return queueClient;
         }
 
-        public async Task<QueueMessage> DequeueMessage()
+        public async Task<Message> DequeueMessage()
         {
             var queueClient = await GetQueueClient();
-            return await queueClient.ReceiveMessageAsync();
+            var response = await queueClient.ReceiveMessageAsync();
+
+            if (response.Value == null)
+                return null;
+
+            return new Message
+            {
+                MessageId = response.Value.MessageId,
+                MessageText = response.Value.MessageText,
+                PopReceipt = response.Value.PopReceipt
+            };
         }
 
-        public async Task<Response> DeleteMessage(QueueMessage message)
+        public async Task DeleteMessage(Message message)
         {
             var queueClient = await GetQueueClient();
-            return await queueClient.DeleteMessageAsync(message.MessageId, message.PopReceipt);
+            await queueClient.DeleteMessageAsync(message.MessageId, message.PopReceipt);
         }
     }
 }

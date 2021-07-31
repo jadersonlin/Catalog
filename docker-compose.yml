@@ -1,0 +1,25 @@
+version: '3.4'
+
+services:
+
+  catalogdb:
+    image: mongo
+
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite
+    hostname: azurite
+    ports:
+    - "10000:10000"
+    - "10001:10001"
+
+  catalog.api:
+    image: ${DOCKER_REGISTRY-}catalogapi
+    build:
+      context: .
+      dockerfile: CatalogoAPI/Dockerfile
+
+  catalog.background:
+    image: ${DOCKER_REGISTRY-}catalogbackground
+    build:
+      context: .
+      dockerfile: Catalog.Background/Dockerfile

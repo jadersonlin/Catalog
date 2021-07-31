@@ -2,16 +2,16 @@
 {
     public class Product
     {
-        public Product(int sku, string name, bool freeShipping, string description, decimal price)
+        public Product(int lm, string name, bool freeShipping, string description, decimal price)
         {
-            Sku = sku;
+            Lm = lm;
             Description = description;
             Name = name;
             FreeShipping = freeShipping;
             Price = price;
         }
 
-        public int Sku { get; }
+        public int Lm { get; }
 
         public string Name { get; }
 

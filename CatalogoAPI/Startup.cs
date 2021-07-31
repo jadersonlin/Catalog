@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using Catalog.Application.Interfaces;
+using Catalog.Infrastructure.Extraction;
 using Catalog.Infrastructure.Messages;
 using Catalog.Infrastructure.Storage;
 using Microsoft.AspNetCore.Builder;
@@ -47,9 +48,7 @@ namespace Catalog.API
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
-            {
                 app.UseDeveloperExceptionPage();
-            }
 
             app.UseSwagger();
 

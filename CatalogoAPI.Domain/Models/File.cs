@@ -10,7 +10,6 @@ namespace Catalog.Domain.Models
         public File(Guid id)
         {
             Id = id;
-            ValidationErrors = new List<KeyValuePair<string, string>>();
         }
 
         public Guid Id { get; }
@@ -18,12 +17,16 @@ namespace Catalog.Domain.Models
         public long Length { get; set; }
         public DateTime UploadedAt { get; set; }
         public DateTime? ProcessedAt { get; set; }
-        public FileProcessingStatus Status { get; set; }
-        public IList<KeyValuePair<string, string>> ValidationErrors { get; }
+        public FileProcessingStatus Status => GetStatus();
+        
+        public IList<KeyValuePair<string, string>> ValidationErrors { get; set; }
 
-        public void InformError(string cell, string errorMessage)
+        private FileProcessingStatus GetStatus()
         {
-            ValidationErrors.Add(new KeyValuePair<string, string>(cell, errorMessage));
+            if (ProcessedAt == null)
+                return FileProcessingStatus.Uploaded;
+
+            return ValidationErrors.Count == 0 ? FileProcessingStatus.Processed : FileProcessingStatus.InvalidFile;
         }
     }
 }

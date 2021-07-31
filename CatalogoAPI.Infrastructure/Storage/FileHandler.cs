@@ -11,20 +11,20 @@ namespace Catalog.Infrastructure.Storage
     public class FileHandler
     {
         private readonly IConfiguration configuration;
-        private readonly IFormFile file;
         private readonly BlobServiceClient blobServiceClient;
         private const string ValidExtension = ".xlsx";
+        private readonly BlobHandler blobHandler;
 
-        public FileHandler(IConfiguration configuration, IFormFile file, BlobServiceClient blobServiceClient)
+        public FileHandler(IConfiguration configuration, BlobServiceClient blobServiceClient)
         {
             this.configuration = configuration;
-            this.file = file;
             this.blobServiceClient = blobServiceClient;
+            blobHandler = new BlobHandler(configuration, blobServiceClient);
         }
 
-        public async Task<FileData> SaveFile()
+        public async Task<FileData> SaveFile(IFormFile file)
         {
-            if (!IsValid())
+            if (!IsFileValid(file))
                 throw new InvalidDataException("Arquivo inválido!");
 
             var id = Guid.NewGuid();
@@ -33,40 +33,29 @@ namespace Catalog.Infrastructure.Storage
 
             await using var stream = file.OpenReadStream();
 
-            var blobClient = GetBlobClient(fileName);
+            var blobClient = blobHandler.GetBlobClient(fileName);
             var result = await blobClient.UploadAsync(stream, false);
-
             var hash = Convert.ToBase64String(result.Value.ContentHash);
 
-            return GetFileData(id, hash);
+            return GetFileData(file, id, hash);
         }
-
-        private BlobClient GetBlobClient(string blobName)
+        
+        private bool IsFileValid(IFormFile file)
         {
-            var containerClient = GetContainerClient();
-
-            if (!containerClient.Exists()) 
-                throw new InvalidOperationException("Blob client doesn't exist.");
-
-            var blobClient = containerClient.GetBlobClient(blobName);
-             
-            return blobClient;
+            return IsLenghtValid(file) && IsExtensionValid(file);
         }
 
-        private BlobContainerClient GetContainerClient()
+        private bool IsLenghtValid(IFormFile file)
         {
-            var containerName = configuration.GetSection("Storage:ContainerName").Value;
-            var containerClient = blobServiceClient.GetBlobContainerClient(containerName);
-            containerClient.CreateIfNotExists();
-            return containerClient;
+            return file.Length > 0;
         }
 
-        private bool IsValid()
+        private bool IsExtensionValid(IFormFile file)
         {
-            return file.Length > 0 && Path.GetExtension(file.FileName) == ValidExtension;
+            return Path.GetExtension(file.FileName) == ValidExtension;
         }
 
-        private FileData GetFileData(Guid id, string hash)
+        private FileData GetFileData(IFormFile file, Guid id, string hash)
         {
             return new FileData
             {
@@ -76,6 +65,15 @@ namespace Catalog.Infrastructure.Storage
                 UploadedAt = DateTime.Now,
                 Hash = hash
             };
+        }
+
+        public async Task<Stream> DownloadFile(string fileId)
+        {
+            var blobClient = blobHandler.GetBlobClient(fileId + ValidExtension);
+
+            var file = await blobClient.DownloadAsync();
+
+            return file.Value.Content;
         }
     }
 }
