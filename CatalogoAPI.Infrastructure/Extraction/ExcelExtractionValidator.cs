@@ -3,11 +3,11 @@ using System.Linq;
 
 namespace Catalog.Infrastructure.Extraction
 {
-    public class ExcelExtrationValidator
+    public class ExcelExtractionValidator
     {
         private readonly IList<KeyValuePair<string, string>> validationErrors;
 
-        public ExcelExtrationValidator()
+        public ExcelExtractionValidator()
         {
             validationErrors = new List<KeyValuePair<string, string>>();
         }
@@ -22,7 +22,7 @@ namespace Catalog.Infrastructure.Extraction
             return validationErrors.ToList();
         }
 
-        public int? TryGetCategoryId(string propertyName, object value, string cellAdress)
+        public int? TryGetInt(string propertyName, object value, string cellAdress)
         {
             var intValue = TryGetInt(value);
 
@@ -32,7 +32,7 @@ namespace Catalog.Infrastructure.Extraction
             return intValue;
         }
 
-        public int? TryGetInt(object value)
+        private int? TryGetInt(object value)
         {
             if (int.TryParse(value.ToString(), out var result))
                 return result;
@@ -52,10 +52,13 @@ namespace Catalog.Infrastructure.Extraction
 
         public string TryGetString(string propertyName, object value, int row, int column)
         {
-            var stringValue = value.ToString();
+            var stringValue = value?.ToString();
 
             if (string.IsNullOrWhiteSpace(stringValue))
+            {
                 AddValidationError(propertyName, value, row, column);
+                return null;
+            }
 
             return stringValue;
         }
@@ -72,7 +75,7 @@ namespace Catalog.Infrastructure.Extraction
 
         public decimal? TryGetDecimal(string propertyName, object value, int row, int column)
         {
-            if (decimal.TryParse(value.ToString(), out var result))
+            if (value != null && decimal.TryParse(value.ToString(), out var result))
                 return result;
 
             AddValidationError(propertyName, value, row, column);
@@ -81,9 +84,10 @@ namespace Catalog.Infrastructure.Extraction
         
         private void AddValidationError(string propertyName, object value, int row, int column)
         {
-            validationErrors.Add(
-                new KeyValuePair<string, string>($"Invalid {propertyName} in row {row + 1} and column {column + 1} ",
-                    value.ToString()));
+            var messageKey = $"Invalid {propertyName} in row {row + 1} and column {column + 1} ";
+            var messageValue = value == null ? "" : value.ToString();
+
+            validationErrors.Add(new KeyValuePair<string, string>(messageKey, messageValue));
         }
 
         public void NotifyEmptySpreadsheet()

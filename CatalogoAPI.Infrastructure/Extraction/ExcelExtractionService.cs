@@ -29,7 +29,7 @@ namespace Catalog.Infrastructure.Extraction
         {
             var fileStream = storageService.GetFile(fileId);
 
-            var validator = new ExcelExtrationValidator();
+            var validator = new ExcelExtractionValidator();
             var validationErrors = new List<KeyValuePair<string, string>>();
             IList<ProductData> products = new List<ProductData>();
 
@@ -44,7 +44,7 @@ namespace Catalog.Infrastructure.Extraction
             return new Tuple<IList<ProductData>, IList<KeyValuePair<string, string>>>(products, validationErrors);
         }
 
-        private async Task ExtractDataFromFile(Task<Stream> fileStream, ExcelExtrationValidator validator, IList<ProductData> products)
+        private async Task ExtractDataFromFile(Task<Stream> fileStream, ExcelExtractionValidator validator, IList<ProductData> products)
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
@@ -55,11 +55,11 @@ namespace Catalog.Infrastructure.Extraction
             GetProductsFromSpreadsheet(worksheet, validator, products);
         }
 
-        private void GetProductsFromSpreadsheet(ExcelWorksheet worksheet, ExcelExtrationValidator validator, IList<ProductData> products)
+        private void GetProductsFromSpreadsheet(ExcelWorksheet worksheet, ExcelExtractionValidator validator, IList<ProductData> products)
         {
             var categoryIdCellObject = worksheet.Cells[CategoryIdCell].Value;
 
-            var categoryId = validator.TryGetCategoryId("CategoryId", categoryIdCellObject, CategoryIdCell);
+            var categoryId = validator.TryGetInt("CategoryId", categoryIdCellObject, CategoryIdCell);
 
             for (var row = FirstCollectionRow; row < worksheet.Cells.Rows; row++)
             {
