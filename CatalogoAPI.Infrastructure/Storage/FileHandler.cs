@@ -59,7 +59,7 @@ namespace Catalog.Infrastructure.Storage
         {
             return new FileData
             {
-                Id = id,
+                Id = id.ToString(),
                 FileName = file.FileName,
                 Length = file.Length,
                 UploadedAt = DateTime.Now,

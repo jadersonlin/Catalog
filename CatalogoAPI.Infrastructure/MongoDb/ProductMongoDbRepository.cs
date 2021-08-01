@@ -1,46 +1,73 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Catalog.Domain.Models;
 using Catalog.Domain.Repositories;
+using MongoDB.Driver;
 
 namespace Catalog.Infrastructure.MongoDb
 {
     public class ProductMongoDbRepository : IProductRepository
     {
-        public Task<Product> GetById(int? id)
+        private readonly ICatalogContext context;
+
+        public ProductMongoDbRepository(ICatalogContext context)
         {
-            throw new NotImplementedException();
+            this.context = context;
         }
 
-        public Task<IEnumerable<Product>> GetAll()
+        public async Task<Product> GetById(object id)
         {
-            throw new NotImplementedException();
+            var lm = Convert.ToInt32(id);
+
+            return await context
+                .Products
+                .Find(p => p.Lm == lm)
+                .FirstOrDefaultAsync();
         }
 
-        public Task InsertMany(IList<Product> obj)
+        public async Task<IEnumerable<Product>> GetAll()
         {
-            throw new NotImplementedException();
+            return await context
+                .Products
+                .Find(p => true)
+                .ToListAsync();
         }
 
-        public Task InsertMany(IEnumerable<Product> obj)
+        public async Task InsertMany(IList<Product> obj)
         {
-            throw new NotImplementedException();
+            var listWrites = obj
+                .Select(product => new InsertOneModel<Product>(product))
+                .Cast<WriteModel<Product>>()
+                .ToList();
+
+            await context.Products.BulkWriteAsync(listWrites, new BulkWriteOptions
+            {
+                IsOrdered = false
+            });
         }
 
-        public Task Insert(Product obj)
+        public async Task<bool> Update(Product obj)
         {
-            throw new NotImplementedException();
+            var updateResult = await context
+                .Products
+                .ReplaceOneAsync(filter: g => g.Lm == obj.Lm, replacement: obj);
+
+            return updateResult.IsAcknowledged && updateResult.ModifiedCount > 0;
         }
 
-        public Task Update(Product obj)
+        public async Task<bool> Remove(object id)
         {
-            throw new NotImplementedException();
-        }
+            var lm = Convert.ToInt32(id);
 
-        public Task Remove(Product obj)
-        {
-            throw new NotImplementedException();
+            var filter = Builders<Product>.Filter.Eq(p => p.Lm, lm);
+            
+            var deleteResult = await context
+                .Products
+                .DeleteOneAsync(filter);
+
+            return deleteResult.IsAcknowledged && deleteResult.DeletedCount > 0;
         }
 
         public void Dispose()

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Catalog.Application.Dtos;
 using Catalog.Application.Interfaces;
+using Catalog.Domain.Enums;
 using Catalog.Domain.Models;
 using Catalog.Domain.Repositories;
 using Newtonsoft.Json;
@@ -37,15 +38,22 @@ namespace Catalog.Application.Impl
 
             var file = JsonConvert.DeserializeObject<UploadFileResult>(message.MessageText);
 
-            var (products, validationErrors) = await extractionService.ExtractDataFromFile(file.Id.ToString());
+            if (file == null)
+                throw new InvalidOperationException("Message File not found.");
+
+            var (products, validationErrors) = await extractionService.ExtractDataFromFile(file.Id);
 
             var fileModel = MapFile(file);
             fileModel.ValidationErrors = validationErrors;
 
-            var productModels = MapProductModels(products);
-
             await fileRepository.Insert(fileModel);
-            await productRepository.InsertMany(productModels);
+
+            if (fileModel.Status == FileProcessingStatus.Processed)
+            {
+                var productModels = MapProductModels(products);
+                await productRepository.InsertMany(productModels);
+            }
+
             await queueService.DeleteMessage(message);
         }
 
@@ -62,7 +70,7 @@ namespace Catalog.Application.Impl
 
         private IList<Product> MapProductModels(IList<ProductData> products)
         {
-            return products.Select(p => new Product(p.Lm, p.Name, p.FreeShipping, p.Description, p.Price)).ToList();
+            return products.Select(p => new Product(p.Lm, p.Name, p.FreeShipping, p.Description, p.Price, p.CategoryId)).ToList();
         }
     }
 }

@@ -1,9 +1,8 @@
-using System;
-using System.IO;
-using System.Reflection;
+using Catalog.Application.Impl;
 using Catalog.Application.Interfaces;
-using Catalog.Infrastructure.Extraction;
+using Catalog.Domain.Repositories;
 using Catalog.Infrastructure.Messages;
+using Catalog.Infrastructure.MongoDb;
 using Catalog.Infrastructure.Storage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,6 +11,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace Catalog.API
 {
@@ -24,7 +26,6 @@ namespace Catalog.API
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
@@ -42,6 +43,10 @@ namespace Catalog.API
 
             services.AddScoped<IStorageService, FileStorageService>();
             services.AddScoped<IQueueService, AzureQueueService>();
+            services.AddScoped<ICatalogContext, CatalogMongoDbContext>();
+            services.AddScoped<IFileRepository, FileMongoDbRepository>();
+            services.AddScoped<IProductRepository, ProductMongoDbRepository>();
+            services.AddScoped<ICatalogService, CatalogService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

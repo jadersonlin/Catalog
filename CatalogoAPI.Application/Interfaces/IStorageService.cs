@@ -9,5 +9,6 @@ namespace Catalog.Application.Interfaces
     {
         Task<UploadFileResult> Upload(IFormFile file);
         Task<Stream> GetFile(string fileId);
+        Task<GetProcessingStatusResult> GetProcessingStatus(string fileId);
     }
 }

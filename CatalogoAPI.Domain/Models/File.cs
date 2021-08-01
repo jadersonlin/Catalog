@@ -2,17 +2,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using Catalog.Domain.Enums;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace Catalog.Domain.Models
 {
     public class File
     {
-        public File(Guid id)
+        public File(string id)
         {
             Id = id;
         }
 
-        public Guid Id { get; }
+        [BsonId]
+        public string Id { get; }
+
         public string FileName { get; set; }
         public long Length { get; set; }
         public DateTime UploadedAt { get; set; }

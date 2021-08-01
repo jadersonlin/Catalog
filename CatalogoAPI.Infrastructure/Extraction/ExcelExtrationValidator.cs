@@ -22,7 +22,7 @@ namespace Catalog.Infrastructure.Extraction
             return validationErrors.ToList();
         }
 
-        public int? TryGetString(string propertyName, object value, string cellAdress)
+        public int? TryGetCategoryId(string propertyName, object value, string cellAdress)
         {
             var intValue = TryGetInt(value);
 

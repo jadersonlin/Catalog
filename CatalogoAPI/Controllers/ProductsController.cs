@@ -1,9 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using Catalog.Application.Dtos;
-using Microsoft.AspNetCore.Hosting;
+﻿using Catalog.Application.Dtos;
+using Catalog.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace Catalog.API.Controllers
 {
@@ -14,58 +12,67 @@ namespace Catalog.API.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly ILogger<ProductsController> logger;
-        private readonly IWebHostEnvironment environment;
+        private readonly ICatalogService catalogService;
 
         /// <summary>
         /// Actions in Product Context
         /// </summary>
-        /// <param name="logger"></param>
-        /// <param name="environment"></param>
-        public ProductsController(ILogger<ProductsController> logger, 
-            IWebHostEnvironment environment)
+        /// <param name="catalogService"></param>
+        public ProductsController(ICatalogService catalogService)
         {
-            this.logger = logger;
-            this.environment = environment;
+            this.catalogService = catalogService;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="lm"></param>
         /// <returns></returns>
-        [Route("{id}")]
+        [Route("{lm}")]
         [HttpGet]
-        public async Task<GetProductResult> Get(int id)
+        public async Task<ActionResult<GetProductResult>> Get(int lm)
         {
-            return new GetProductResult();
+            var product = await catalogService.GetProduct(lm);
+
+            if (product != null)
+                return Ok(product);
+
+            return NotFound("Product not found!");
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="input"></param>
-        /// <param name="id"></param>
+        /// <param name="lm"></param>
         /// <returns></returns>
-        //[Route("~/[action]/{id}")]
-        [Route("{id}")]
+        [Route("{lm}")]
         [HttpPut]
-        public async Task<PutProductResult> Put([FromBody]PutProductInput input, int id)
+        public async Task<ActionResult> Put([FromBody]PutProductInput input, int lm)
         {
-            throw new NotImplementedException();
+            var result = await catalogService.EditProduct(input, lm);
+
+            if (result)
+                return Ok("Sucess!");
+
+            return NotFound("Product not found to edit!");
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="lm"></param>
         /// <returns></returns>
-        //[Route("~/[action]/{id}")]
-        [Route("{id}")]
+        [Route("{lm}")]
         [HttpDelete]
-        public async Task<DeleteProductResult> Delete(int id)
+        public async Task<ActionResult> Delete(int lm)
         {
-            throw new NotImplementedException();
+            var result = await catalogService.DeleteProduct(lm);
+
+            if (result)
+                return Ok("Success!");
+
+            return NotFound("Product not found to delete!");
         }
     }
 }

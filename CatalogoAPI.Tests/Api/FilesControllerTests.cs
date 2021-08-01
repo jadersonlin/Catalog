@@ -40,7 +40,7 @@ namespace Catalog.Tests.Api
             
             var uploadFileResult = new UploadFileResult
             {
-                Id = Guid.NewGuid(),
+                Id = Guid.NewGuid().ToString(),
                 FileName = fileName,
                 Length = 10000,
                 UploadedAt = new DateTime(2020,01,01),
@@ -57,10 +57,12 @@ namespace Catalog.Tests.Api
 
             //assert
             Assert.IsAssignableFrom<UploadFileResult>(result);
-            Assert.IsType<Guid>(result.Id);
             Assert.IsType<DateTime>(result.UploadedAt);
             Assert.IsType<string>(result.FileName);
             Assert.IsType<string>(result.Message);
+
+            var isIdValidGuid = Guid.TryParse(result.Id, out _);
+            Assert.True(isIdValidGuid);
         }
     }
 }

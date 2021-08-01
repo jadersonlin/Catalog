@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace Catalog.Infrastructure.Extraction
 {
-
     public class ExcelExtractionService : IExtractionService
     {
         private readonly IStorageService storageService;
@@ -60,7 +59,7 @@ namespace Catalog.Infrastructure.Extraction
         {
             var categoryIdCellObject = worksheet.Cells[CategoryIdCell].Value;
 
-            var categoryId = validator.TryGetString("CategoryId", categoryIdCellObject, CategoryIdCell);
+            var categoryId = validator.TryGetCategoryId("CategoryId", categoryIdCellObject, CategoryIdCell);
 
             for (var row = FirstCollectionRow; row < worksheet.Cells.Rows; row++)
             {

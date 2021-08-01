@@ -25,6 +25,7 @@ namespace Catalog.Background
                 {
                     var configuration = hostContext.Configuration;
                     services.AddScoped<IQueueService, AzureQueueService>();
+                    services.AddScoped<ICatalogContext, CatalogMongoDbContext>();
                     services.AddScoped<IProductBatchService, ProductBatchService>();
                     services.AddScoped<IExtractionService, ExcelExtractionService>();
                     services.AddScoped<IStorageService, FileStorageService>();

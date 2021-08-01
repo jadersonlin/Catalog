@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Catalog.Application.Dtos;
 
 namespace Catalog.Application.Interfaces
 {
