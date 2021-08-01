@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalog.Domain.Enums;
 
 namespace Catalog.Background
 {
@@ -36,7 +37,17 @@ namespace Catalog.Background
         {
             var count = Interlocked.Increment(ref executionCount);
 
-            await productBatchService.ProcessFile();
+            try
+            {
+                var processingStatus = await productBatchService.ProcessFile();
+
+                if (processingStatus == FileProcessingStatus.InvalidFile)
+                    logger.LogWarning("An invalid file was processed.");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError("Error on file processing work.", ex);
+            }
 
             logger.LogInformation("Timed Hosted Service is working. Count: {Count}", count);
         }

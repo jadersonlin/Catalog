@@ -4,16 +4,18 @@ services:
 
   mongo:
     image: mongo
-    restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
+    restart: unless-stopped
     ports:
       - 27017:27017
-  
+    volumes:
+      - c:/data/db:/data/db
+      - c:/data/configdb:/data/configdb
+    
   mongo-express:
     image: mongo-express
-    restart: always
     ports:
       - 8081:8081
     environment:

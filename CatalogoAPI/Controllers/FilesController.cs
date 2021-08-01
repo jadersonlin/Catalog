@@ -45,7 +45,7 @@ namespace Catalog.API.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("upload/status/{fileId}")]
-        public async Task<ActionResult<GetProcessingStatusResult>> GetProcessingStatus(string fileId)
+        public async Task<ActionResult<GetProcessingStatusResult>> GetStatus(string fileId)
         {
             var status = await storageService.GetProcessingStatus(fileId);
 

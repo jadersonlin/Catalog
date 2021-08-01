@@ -16,7 +16,7 @@
             <param name="file"></param>
             <returns></returns>
         </member>
-        <member name="M:Catalog.API.Controllers.FilesController.GetProcessingStatus(System.String)">
+        <member name="M:Catalog.API.Controllers.FilesController.GetStatus(System.String)">
             <summary>
             
             </summary>

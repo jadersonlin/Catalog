@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Catalog.Application.Dtos;
@@ -8,6 +9,7 @@ using Catalog.Domain.Enums;
 using Catalog.Domain.Models;
 using Catalog.Domain.Repositories;
 using Newtonsoft.Json;
+using File = Catalog.Domain.Models.File;
 
 namespace Catalog.Application.Impl
 {
@@ -29,17 +31,14 @@ namespace Catalog.Application.Impl
             this.productRepository = productRepository;
         }
 
-        public async Task ProcessFile()
+        public async Task<FileProcessingStatus?> ProcessFile()
         { 
             var message = await queueService.DequeueMessage();
 
             if (message == null)
-                return;
+                return null;
 
-            var file = JsonConvert.DeserializeObject<UploadFileResult>(message.MessageText);
-
-            if (file == null)
-                throw new InvalidOperationException("Message File not found.");
+            var file = GetFileData(message.MessageText);
 
             var (products, validationErrors) = await extractionService.ExtractDataFromFile(file.Id);
 
@@ -55,6 +54,27 @@ namespace Catalog.Application.Impl
             }
 
             await queueService.DeleteMessage(message);
+
+            return fileModel.Status;
+        }
+
+        private UploadFileResult GetFileData(string messageText)
+        {
+            if (string.IsNullOrWhiteSpace(messageText))
+                throw new InvalidDataException("Message content is invalid.");
+
+            UploadFileResult file;
+
+            try
+            {
+                file = JsonConvert.DeserializeObject<UploadFileResult>(messageText);
+            }
+            catch (JsonReaderException ex)
+            {
+                throw new InvalidDataException("Invalid message format.", ex);
+            }
+
+            return file;
         }
 
         private File MapFile(UploadFileResult file)
