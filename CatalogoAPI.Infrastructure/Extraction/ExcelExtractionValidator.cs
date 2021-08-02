@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace Catalog.Infrastructure.Extraction
@@ -65,7 +66,8 @@ namespace Catalog.Infrastructure.Extraction
 
         public bool? TryGetBool(string propertyName, object value, int row, int column)
         {
-            var valueString = value.ToString();
+            var valueString = value?.ToString().Trim();
+
             if (valueString == "1" || valueString == "0")
                 return valueString == "1";
 
@@ -75,7 +77,7 @@ namespace Catalog.Infrastructure.Extraction
 
         public decimal? TryGetDecimal(string propertyName, object value, int row, int column)
         {
-            if (value != null && decimal.TryParse(value.ToString(), out var result))
+            if (value != null && decimal.TryParse(value.ToString().Trim(), NumberStyles.Number, new CultureInfo("en-US"), out var result))
                 return result;
 
             AddValidationError(propertyName, value, row, column);
@@ -85,7 +87,7 @@ namespace Catalog.Infrastructure.Extraction
         private void AddValidationError(string propertyName, object value, int row, int column)
         {
             var messageKey = $"Invalid {propertyName} in row {row + 1} and column {column + 1} ";
-            var messageValue = value == null ? "" : value.ToString();
+            var messageValue = value == null ? "" : value.ToString().Trim();
 
             validationErrors.Add(new KeyValuePair<string, string>(messageKey, messageValue));
         }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Catalog.Infrastructure.Extraction;
+﻿using Catalog.Infrastructure.Extraction;
 using Xunit;
 
 namespace Catalog.Tests.Infraestructure
@@ -98,8 +96,8 @@ namespace Catalog.Tests.Infraestructure
 
         [Theory]
         [InlineData(null)]
-        [InlineData((object)"")]
-        [InlineData((object)"a")]
+        [InlineData("")]
+        [InlineData("a")]
         public void File_has_not_valid_decimal_field(object fieldValue)
         {
             var value = validator.TryGetDecimal("Teste", fieldValue, 1, 1);
@@ -107,6 +105,35 @@ namespace Catalog.Tests.Infraestructure
             var isValid = validator.IsExtractionValid();
 
             Assert.False(isValid);
+            Assert.Null(value);
+        }
+
+        [Fact]
+        public void File_has_valid_bool_field()
+        {
+            object fieldValue = 1;
+
+            var value = validator.TryGetBool("Teste", fieldValue, 1, 1);
+
+            var isValid = validator.IsExtractionValid();
+
+            Assert.True(value);
+            Assert.True(isValid);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(2)]
+        [InlineData("a")]
+        public void File_has_not_valid_bool_field(object fieldValue)
+        {
+            var value = validator.TryGetBool("Teste", fieldValue, 1, 1);
+
+            var isValid = validator.IsExtractionValid();
+
+            Assert.False(isValid);
+            Assert.Null(value);
         }
     }
 }

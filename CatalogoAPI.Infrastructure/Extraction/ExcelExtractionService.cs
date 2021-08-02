@@ -12,11 +12,6 @@ namespace Catalog.Infrastructure.Extraction
     {
         private readonly IStorageService storageService;
 
-        public ExcelExtractionService(IStorageService storageService)
-        {
-            this.storageService = storageService;
-        }
-
         private const string CategoryIdCell = "B1";
         private const int LmColumn = 1;
         private const int NameColumn = 2;
@@ -24,6 +19,11 @@ namespace Catalog.Infrastructure.Extraction
         private const int DescriptionColumn = 4;
         private const int PriceColumn = 5;
         private const int FirstCollectionRow = 4;
+
+        public ExcelExtractionService(IStorageService storageService)
+        {
+            this.storageService = storageService;
+        }
 
         public async Task<Tuple<IList<ProductData>, IList<KeyValuePair<string, string>>>> ExtractDataFromFile(string fileId)
         {
@@ -85,7 +85,7 @@ namespace Catalog.Infrastructure.Extraction
                 var description = validator.TryGetString("Description", descriptionCellObject, row, DescriptionColumn);
 
                 var priceCellObject = worksheet.Cells[row, PriceColumn].Value;
-                var price = validator.TryGetDecimal("Price", Convert.ToDecimal(priceCellObject), row, PriceColumn);
+                var price = validator.TryGetDecimal("Price", priceCellObject, row, PriceColumn);
 
                 if (validator.IsExtractionValid())
                     products.Add(new ProductData
