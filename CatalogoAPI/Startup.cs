@@ -31,8 +31,19 @@ namespace Catalog.API
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Catalog API", Version = "v1" });
                 c.IncludeXmlComments(GetXmlCommentsFilePath());
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "Catalog API",
+                    Description = "ASP.NET Core Web API (.NET 5) with Docker, MongoDb and Azure Storage Queue and Blob.",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Jaderson Linhares",
+                        Email = string.Empty,
+                        Url = new Uri("https://github.com/jadersonlin/Catalog")
+                    }
+                });
             });
 
             services.AddAzureClients(builder =>

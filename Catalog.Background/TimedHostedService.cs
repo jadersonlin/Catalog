@@ -28,7 +28,7 @@ namespace Catalog.Background
         {
             logger.LogInformation("Timed Hosted Service running.");
 
-            timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromSeconds(10));
+            timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromSeconds(20));
 
             return Task.CompletedTask;
         }
@@ -37,6 +37,13 @@ namespace Catalog.Background
         {
             var count = Interlocked.Increment(ref executionCount);
 
+            await ProcessFile();
+
+            logger.LogInformation("Timed Hosted Service is working. Count: {Count}", count);
+        }
+
+        private async Task ProcessFile()
+        {
             try
             {
                 var processingStatus = await productBatchService.ProcessFile();
@@ -48,8 +55,6 @@ namespace Catalog.Background
             {
                 logger.LogError("Error on file processing work.", ex);
             }
-
-            logger.LogInformation("Timed Hosted Service is working. Count: {Count}", count);
         }
 
         public Task StopAsync(CancellationToken stoppingToken)

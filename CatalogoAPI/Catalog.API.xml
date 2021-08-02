@@ -6,55 +6,49 @@
     <members>
         <member name="T:Catalog.API.Controllers.FilesController">
             <summary>
-            
+            Actions in File Context
             </summary>
         </member>
         <member name="M:Catalog.API.Controllers.FilesController.Upload(Microsoft.AspNetCore.Http.IFormFile)">
             <summary>
-            
+            Upload a spreadsheet to insert a batch of products.
             </summary>
-            <param name="file"></param>
-            <returns></returns>
+            <param name="file">XLSX spreadsheet, sent via form-data interface</param>
+            <returns>Uploaded file data</returns>
         </member>
         <member name="M:Catalog.API.Controllers.FilesController.GetStatus(System.String)">
             <summary>
-            
+            Get processing status from uploaded spreadsheet.
             </summary>
-            <param name="fileId"></param>
-            <returns></returns>
+            <param name="fileId">File identificator</param>
+            <returns>Uploaded file data and processing status</returns>
         </member>
         <member name="T:Catalog.API.Controllers.ProductsController">
             <summary>
             Actions in Product Context
             </summary>
         </member>
-        <member name="M:Catalog.API.Controllers.ProductsController.#ctor(Catalog.Application.Interfaces.ICatalogService)">
-            <summary>
-            Actions in Product Context
-            </summary>
-            <param name="catalogService"></param>
-        </member>
         <member name="M:Catalog.API.Controllers.ProductsController.Get(System.Int32)">
             <summary>
-            
+            Get products by Lm.
             </summary>
-            <param name="lm"></param>
-            <returns></returns>
+            <param name="lm">Product Id</param>
+            <returns>Product data</returns>
         </member>
         <member name="M:Catalog.API.Controllers.ProductsController.Put(Catalog.Application.Dtos.PutProductInput,System.Int32)">
             <summary>
-            
+            Edit product data.
             </summary>
             <param name="input"></param>
-            <param name="lm"></param>
-            <returns></returns>
+            <param name="lm">Product Id</param>
+            <returns>Action result</returns>
         </member>
         <member name="M:Catalog.API.Controllers.ProductsController.Delete(System.Int32)">
             <summary>
-            
+            Remove a product.
             </summary>
-            <param name="lm"></param>
-            <returns></returns>
+            <param name="lm">Product Id</param>
+            <returns>Action result</returns>
         </member>
     </members>
 </doc>

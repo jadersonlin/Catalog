@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Catalog.Application.Dtos
 {
+    /// <summary>
+    /// File processing status and data.
+    /// </summary>
     public class GetProcessingStatusResult : ResultBase
     {
         public string Id { get; set; }

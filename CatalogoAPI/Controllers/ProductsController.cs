@@ -14,20 +14,16 @@ namespace Catalog.API.Controllers
     {
         private readonly ICatalogService catalogService;
 
-        /// <summary>
-        /// Actions in Product Context
-        /// </summary>
-        /// <param name="catalogService"></param>
         public ProductsController(ICatalogService catalogService)
         {
             this.catalogService = catalogService;
         }
 
         /// <summary>
-        /// 
+        /// Get products by Lm.
         /// </summary>
-        /// <param name="lm"></param>
-        /// <returns></returns>
+        /// <param name="lm">Product Id</param>
+        /// <returns>Product data</returns>
         [Route("{lm}")]
         [HttpGet]
         public async Task<ActionResult<GetProductResult>> Get(int lm)
@@ -41,11 +37,11 @@ namespace Catalog.API.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Edit product data.
         /// </summary>
         /// <param name="input"></param>
-        /// <param name="lm"></param>
-        /// <returns></returns>
+        /// <param name="lm">Product Id</param>
+        /// <returns>Action result</returns>
         [Route("{lm}")]
         [HttpPut]
         public async Task<ActionResult> Put([FromBody]PutProductInput input, int lm)
@@ -59,10 +55,10 @@ namespace Catalog.API.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Remove a product.
         /// </summary>
-        /// <param name="lm"></param>
-        /// <returns></returns>
+        /// <param name="lm">Product Id</param>
+        /// <returns>Action result</returns>
         [Route("{lm}")]
         [HttpDelete]
         public async Task<ActionResult> Delete(int lm)

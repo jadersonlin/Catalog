@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Catalog.API.Controllers
 {
     /// <summary>
-    /// 
+    /// Actions in File Context
     /// </summary>
     [Route("api/files")]
     [ApiController]
@@ -22,10 +22,10 @@ namespace Catalog.API.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Upload a spreadsheet to insert a batch of products.
         /// </summary>
-        /// <param name="file"></param>
-        /// <returns></returns>
+        /// <param name="file">XLSX spreadsheet, sent via form-data interface</param>
+        /// <returns>Uploaded file data</returns>
         [HttpPost]
         [Route("upload")]
         public async Task<ActionResult<UploadFileResult>> Upload([FromForm] IFormFile file)
@@ -39,10 +39,10 @@ namespace Catalog.API.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Get processing status from uploaded spreadsheet.
         /// </summary>
-        /// <param name="fileId"></param>
-        /// <returns></returns>
+        /// <param name="fileId">File identificator</param>
+        /// <returns>Uploaded file data and processing status</returns>
         [HttpGet]
         [Route("upload/status/{fileId}")]
         public async Task<ActionResult<GetProcessingStatusResult>> GetStatus(string fileId)
