@@ -23,10 +23,10 @@ namespace Catalog.Tests.Application
 
         public ProductBatchServiceTests()
         {
-            this.queueServiceMock = new Mock<IQueueService>();
-            this.extractionServiceMock = new Mock<IExtractionService>();
-            this.fileRepositoryMock = new Mock<IFileRepository>();
-            this.productRepositoryMock = new Mock<IProductRepository>();
+            queueServiceMock = new Mock<IQueueService>();
+            extractionServiceMock = new Mock<IExtractionService>();
+            fileRepositoryMock = new Mock<IFileRepository>();
+            productRepositoryMock = new Mock<IProductRepository>();
         }
 
         [Fact]

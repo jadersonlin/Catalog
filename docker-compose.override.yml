@@ -6,7 +6,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
-      - "CatalogDatabaseSettings:ConnectionString=mongodb://catalogdb:27017"
+      
     depends_on:
       - mongo
       - mongo-express

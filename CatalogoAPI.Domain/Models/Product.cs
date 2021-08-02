@@ -31,5 +31,18 @@ namespace Catalog.Domain.Models
 
         [BsonElement("CategoryId")]
         public int CategoryId { get; }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Product prod))
+                return false;
+
+            return prod.Lm == Lm;
+        }
+
+        public override int GetHashCode()
+        {
+            return Lm.GetHashCode();
+        }
     }
 }
