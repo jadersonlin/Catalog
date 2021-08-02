@@ -77,7 +77,7 @@ namespace Catalog.Infrastructure.Extraction
 
         public decimal? TryGetDecimal(string propertyName, object value, int row, int column)
         {
-            if (value != null && decimal.TryParse(value.ToString().Trim(), NumberStyles.Number, new CultureInfo("en-US"), out var result))
+            if (value != null && decimal.TryParse(value.ToString(), NumberStyles.Number, new CultureInfo("pt-BR"), out var result))
                 return result;
 
             AddValidationError(propertyName, value, row, column);
