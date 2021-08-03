@@ -1,5 +1,4 @@
-﻿using System.Net;
-using Catalog.Application.Dtos;
+﻿using Catalog.Application.Dtos;
 using Catalog.Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +11,7 @@ namespace Catalog.API.Controllers
     /// </summary>
     [Route("api/files")]
     [ApiController]
+    [Produces("application/json")]
     public class FilesController : ControllerBase
     {
         private readonly IStorageService storageService;
@@ -28,6 +28,9 @@ namespace Catalog.API.Controllers
         /// <returns>Uploaded file data</returns>
         [HttpPost]
         [Route("upload")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<UploadFileResult>> Upload([FromForm] IFormFile file)
         {
             var result = await storageService.Upload(file);
@@ -45,6 +48,9 @@ namespace Catalog.API.Controllers
         /// <returns>Uploaded file data and processing status</returns>
         [HttpGet]
         [Route("upload/status/{fileId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<GetProcessingStatusResult>> GetStatus(string fileId)
         {
             var status = await storageService.GetProcessingStatus(fileId);

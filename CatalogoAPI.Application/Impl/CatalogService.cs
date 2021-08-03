@@ -1,4 +1,7 @@
-﻿using Catalog.Application.Dtos;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using Catalog.Application.Dtos;
 using Catalog.Application.Interfaces;
 using Catalog.Domain.Models;
 using Catalog.Domain.Repositories;

@@ -24,4 +24,8 @@
     <ProjectReference Include="..\CatalogoAPI.Infrastructure\Catalog.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
+
 </Project>

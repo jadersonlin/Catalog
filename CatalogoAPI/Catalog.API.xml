@@ -36,12 +36,26 @@
             <returns>Product data</returns>
         </member>
         <member name="M:Catalog.API.Controllers.ProductsController.Put(Catalog.Application.Dtos.PutProductInput,System.Int32)">
-            <summary>
-            Edit product data.
-            </summary>
-            <param name="input"></param>
-            <param name="lm">Product Id</param>
-            <returns>Action result</returns>
+             <summary>
+             Edit product data.
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 POST api/products/1
+             
+                 {
+                     "name": "test product",
+                     "freeShipping": false,
+                     "description": "test description",
+                     "price": 10.0,
+                     "categoryId": 123
+                 }
+            
+             </remarks>
+             <param name="input"></param>
+             <param name="lm">Product Id</param>
+             <returns>Action result</returns>
         </member>
         <member name="M:Catalog.API.Controllers.ProductsController.Delete(System.Int32)">
             <summary>
